@@ -2,17 +2,14 @@ FROM node:15
 
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências
 COPY package*.json ./
 
-# Instala as dependências do projeto
-RUN npm install && npm list
+RUN npm install
 
-# Copia todo o código do projeto
 COPY . .
 
-# Expõe a porta que a aplicação irá rodar
+COPY wait-for-it.sh /usr/src/app/
+
 EXPOSE 3000
 
-# Define o comando para rodar a aplicação
-CMD ["npm", "start"]
+CMD ["sh", "wait-for-it.sh", "db:3306", "--", "npm", "start"]

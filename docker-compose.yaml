@@ -6,8 +6,9 @@ services:
     platform: linux/arm64
     container_name: db
     restart: always
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_DATABASE: nodedb
     volumes:
       - mysql_data:/var/lib/mysql
@@ -16,10 +17,13 @@ services:
 
   node:
     build: ./node
+    platform: linux/arm64
     container_name: node
     restart: always
+    command: sh -c "npm install && npm start"
     volumes:
       - ./node:/usr/src/app
+      - /usr/src/app/node_modules # Volume anônimo
     ports:
       - "3000:3000"
     networks:
